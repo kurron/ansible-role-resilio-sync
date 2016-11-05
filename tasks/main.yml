@@ -57,15 +57,3 @@
   become: no
   command: systemctl --user start resilio-sync
   when: resilio_sync_install
-
-- name: Install Atom Editor
-  become: yes
-  dnf:
-      name: "https://github.com/atom/atom/releases/download/v{{developer_atom_version}}/atom.x86_64.rpm"
-  when: (ansible_distribution == "Fedora") and (resilio_sync_install)
-
-- name: Install Atom Editor
-  become: yes
-  yum:
-      name: "https://github.com/atom/atom/releases/download/v{{developer_atom_version}}/atom.x86_64.rpm"
-  when: (ansible_distribution == "CentOS") and (resilio_sync_install)
