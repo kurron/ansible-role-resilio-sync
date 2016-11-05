@@ -6,6 +6,14 @@
       state: present
   when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
 
+- name: Install Resilio Repository
+  become: yes
+  copy:
+      src: files/resilio-sync.repo
+      dest: /etc/yum.repos.d/resilio-sync.repo
+      mode: 0444
+  when: (ansible_distribution == "Fedora") and (resilio_sync_install)
+
 - name: Install Resilio Key
   become: yes
   apt_key:
@@ -13,14 +21,10 @@
       state: present
   when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
 
-- name: Install Resilio Sync
+- name: Install Resilio Key
   become: yes
-  apt:
-      name: resilio-sync
-      update_cache: yes
-      state: present
-      allow_unauthenticated: yes
-  when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
+  command: rpm --import https://linux-packages.resilio.com/resilio-sync/key.asc
+  when: (ansible_distribution == "Fedora") and (resilio_sync_install)
 
 - name: Install Resilio Sync
   become: yes
@@ -31,11 +35,10 @@
       allow_unauthenticated: yes
   when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
 
-- name: Save Non-Root User
-  become: no
-  set_fact:
-      standard_user: "{{ansible_user_id}}"
-  when: resilio_sync_install
+- name: Install Resilio Sync
+  become: yes
+  shell: dnf --assumeyes install resilio-sync
+  when: (ansible_distribution == "Fedora") and (resilio_sync_install)
 
 - name: Reconfigure Systemd
   become: yes
