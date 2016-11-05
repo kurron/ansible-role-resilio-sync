@@ -1,7 +1,7 @@
 Role Name
 =========
 
-Installation of tools than any self-respecting software developer loves and needs.
+The Resilio Sync service.
 
 Requirements
 ------------
@@ -24,7 +24,7 @@ Example Playbook
 ```
 - hosts: servers
   roles:
-      - { role: kurron.software-developer }
+      - { role: kurron.resilio-sync }
 ```
 
 License
