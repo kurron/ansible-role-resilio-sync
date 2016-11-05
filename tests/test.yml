@@ -1,4 +1,4 @@
 ---
 - hosts: remote
   roles:
-  - role: ../../ansible-role-software-developer
+  - role: ../../ansible-role-resilio-sync

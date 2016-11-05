@@ -1,60 +1,68 @@
 ---
-- name: Create folders
-  become: no
-  file:
-      path: "{{item}}"
-      state: directory
-      mode: 0755
-      recurse: yes
-  with_items:
-  - "{{ansible_user_dir}}/GitHub"
-  - "{{ansible_user_dir}}/Bitbucket"
-
-- name: Install Required Packages
+- name: Install Resilio Repository
   become: yes
-  package:
-      name: "{{item}}"
+  apt_repository:
+      repo: 'deb http://linux-packages.resilio.com/resilio-sync/deb resilio-sync non-free'
       state: present
-  with_items:
-  - "git"
-  - "subversion"
-  - "mercurial"
-  - "sshpass"
-  - "httping"
+  when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
 
-- name: Install Required Packages
+- name: Install Resilio Key
   become: yes
-  package:
-      name: "{{item}}"
+  apt_key:
+      url: https://linux-packages.resilio.com/resilio-sync/key.asc
       state: present
-  with_items:
-  - "apache2-utils"
-  when: ansible_distribution == "Ubuntu"
+  when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
 
-- name: Install Python Packages
-  become: yes
-  pip:
-      name: "{{item}}"
-      state: latest
-  with_items:
-  - "pip"
-  - "setuptools"
-  - "httpie"
-
-- name: Install Atom Editor
+- name: Install Resilio Sync
   become: yes
   apt:
-      deb: "https://github.com/atom/atom/releases/download/v{{developer_atom_version}}/atom-amd64.deb"
-  when: (ansible_distribution == "Ubuntu") and (developer_atom_install)
+      name: resilio-sync
+      update_cache: yes
+      state: present
+      allow_unauthenticated: yes
+  when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
+
+- name: Install Resilio Sync
+  become: yes
+  apt:
+      name: resilio-sync
+      update_cache: yes
+      state: present
+      allow_unauthenticated: yes
+  when: (ansible_distribution == "Ubuntu") and (resilio_sync_install)
+
+- name: Save Non-Root User
+  become: no
+  set_fact:
+      standard_user: "{{ansible_user_id}}"
+  when: resilio_sync_install
+
+- name: Reconfigure Systemd
+  become: yes
+  lineinfile:
+      dest: /usr/lib/systemd/user/resilio-sync.service
+      regexp: WantedBy=multi-user.target
+      line: WantedBy=default.target
+  when: resilio_sync_install
+
+- name: Enable Sync As Normal User
+  become: no
+  command: systemctl --user enable resilio-sync
+  when: resilio_sync_install
+
+- name: Start Sync As Normal User
+  become: no
+  command: systemctl --user start resilio-sync
+  when: resilio_sync_install
 
 - name: Install Atom Editor
   become: yes
   dnf:
       name: "https://github.com/atom/atom/releases/download/v{{developer_atom_version}}/atom.x86_64.rpm"
-  when: (ansible_distribution == "Fedora") and (developer_atom_install)
+  when: (ansible_distribution == "Fedora") and (resilio_sync_install)
 
 - name: Install Atom Editor
   become: yes
   yum:
       name: "https://github.com/atom/atom/releases/download/v{{developer_atom_version}}/atom.x86_64.rpm"
-  when: (ansible_distribution == "CentOS") and (developer_atom_install)
+  when: (ansible_distribution == "CentOS") and (resilio_sync_install)

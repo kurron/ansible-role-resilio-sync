@@ -1,6 +1,6 @@
 galaxy_info:
   author: Ronald D. Kurr
-  description: Command-line tools that any software developer needs.
+  description: Resilio Sync, aka BitTorrent Sync.
   company: jvmguy.com
 
   license: Apache 2
@@ -31,13 +31,9 @@ galaxy_info:
     - xenial
 
   galaxy_tags:
-      - development
-      - git
-      - mercurial
-      - subversion
-      - make
-      - atom
+      - peer-to-peer
+      - bit-torrent
+      - torrent
 
 dependencies:
     - { role: kurron.base }
-
