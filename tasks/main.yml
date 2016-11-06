@@ -8,14 +8,6 @@
       recurse: yes
   with_items:
   - "{{ansible_user_dir}}/{{resilio_sync_storage_dir}}"
-  - "{{ansible_user_dir}}/{{ resilio_sync_configuration_dir }}"
-
-- name: Install Resilio Configuration File
-  become: no
-  template:
-      src: templates/config.json.j2
-      dest: "{{ ansible_user_dir}}/{{ resilio_sync_configuration_dir }}/config.json"
-  when: resilio_sync_install
 
 - name: Install Resilio Repository
   become: yes
@@ -58,6 +50,13 @@
   shell: dnf --assumeyes install resilio-sync
   when: (ansible_distribution == "Fedora") and (resilio_sync_install)
 
+- name: Install Resilio Configuration File
+  become: no
+  template:
+      src: templates/config.json.j2
+      dest: "{{ ansible_user_dir}}/{{ resilio_sync_configuration_dir }}/config.json"
+  when: resilio_sync_install
+
 - name: Reconfigure Systemd
   become: yes
   lineinfile:
@@ -73,5 +72,5 @@
 
 - name: Start Sync As Normal User
   become: no
-  command: systemctl --user start resilio-sync
+  command: systemctl --user restart resilio-sync
   when: resilio_sync_install

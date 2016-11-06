@@ -2,4 +2,3 @@
 resilio_sync_install: true
 resilio_sync_storage_dir: .sync/storage
 resilio_sync_configuration_dir: .config/resilio-sync
-resilio_sync_pid_dir: .sync
