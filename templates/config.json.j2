@@ -12,7 +12,7 @@
         "login" : "{{ ansible_user_id }}",
         "password" : "{{ ansible_user_id }}",
         "allow_empty_password" : true,
-        "dir_whitelist" : [ "/mnt" ]
+        "dir_whitelist" : [ "{{ansible_user_dir}}" ]
     },
     "folder_defaults.delete_to_trash" : false,
     "bind_interface" : "{{ ansible_default_ipv4.macaddress }}"
