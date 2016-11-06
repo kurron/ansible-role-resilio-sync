@@ -1,0 +1,21 @@
+{
+    "agree_to_EULA": "yes",
+    "device_name": "{{ ansible_hostname }}",
+    "listening_port" : 0,
+    "storage_path" : "{{ansible_user_dir}}/{{resilio_sync_storage_dir}}",
+    "use_upnp" : true,
+    "download_limit" : 0,
+    "upload_limit" : 0,
+    "directory_root" : "/",
+    "directory_root_policy" : "all",
+    "webui" :
+    {
+        "listen" : "0.0.0.0:8888",
+        "login" : "{{ ansible_user_id }}",
+        "password" : "{{ ansible_user_id }}",
+        "allow_empty_password" : true,
+        "dir_whitelist" : [ "/mnt" ]
+    },
+    "folder_defaults.delete_to_trash" : false,
+    "bind_interface" : "{{ ansible_default_ipv4.macaddress }}"
+}

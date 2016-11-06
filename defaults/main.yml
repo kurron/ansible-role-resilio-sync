@@ -1,3 +1,4 @@
 ---
 resilio_sync_install: true
-resilio_sync_version: 0.0.0
+resilio_sync_storage_dir: .sync
+resilio_sync_configuration_dir: .config/resilio-sync

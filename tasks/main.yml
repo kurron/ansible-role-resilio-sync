@@ -1,4 +1,22 @@
 ---
+- name: Create folders
+  become: no
+  file:
+      path: "{{item}}"
+      state: directory
+      mode: 0755
+      recurse: yes
+  with_items:
+  - "{{ansible_user_dir}}/{{resilio_sync_storage_dir}}"
+  - "{{ansible_user_dir}}/{{ resilio_sync_configuration_dir }}"
+
+- name: Install Resilio Configuration File
+  become: no
+  template:
+      src: templates/config.json.j2
+      dest: "{{ ansible_user_dir}}/{{ resilio_sync_configuration_dir }}/config.json"
+  when: resilio_sync_install
+
 - name: Install Resilio Repository
   become: yes
   apt_repository:
