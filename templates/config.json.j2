@@ -1,11 +1,9 @@
 {
     "agree_to_EULA": "yes",
     "device_name": "{{ ansible_hostname }}",
-    "listening_port" : 0,
     "storage_path" : "{{ansible_user_dir}}/{{resilio_sync_storage_dir}}",
+    "pid_file" : "{{ansible_user_dir}}/{{resilio_sync_pid_dir}}/sync.pid",
     "use_upnp" : true,
-    "download_limit" : 0,
-    "upload_limit" : 0,
     "directory_root" : "/",
     "directory_root_policy" : "all",
     "webui" :
