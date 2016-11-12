@@ -7,6 +7,7 @@
       mode: 0755
       recurse: yes
   with_items:
+  - "{{ansible_user_dir}}/{{resilio_sync_configuration_dir}}"
   - "{{ansible_user_dir}}/{{resilio_sync_storage_dir}}"
 
 - name: Install Resilio Repository
