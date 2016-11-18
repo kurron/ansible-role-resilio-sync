@@ -1,15 +1,4 @@
 ---
-- name: Create folders
-  become: no
-  file:
-      path: "{{item}}"
-      state: directory
-      mode: 0755
-      recurse: yes
-  with_items:
-  - "{{ansible_user_dir}}/{{resilio_sync_configuration_dir}}"
-  - "{{ansible_user_dir}}/{{resilio_sync_storage_dir}}"
-
 - name: Install Resilio Repository
   become: yes
   apt_repository:
@@ -52,26 +41,18 @@
   when: (ansible_distribution == "Fedora") and (resilio_sync_install)
 
 - name: Install Resilio Configuration File
-  become: no
+  become: yes
   template:
       src: templates/config.json.j2
-      dest: "{{ ansible_user_dir}}/{{ resilio_sync_configuration_dir }}/config.json"
+      dest: "/etc/resilio-sync/config.json"
   when: resilio_sync_install
 
-- name: Reconfigure Systemd
+- name: Enable Sync As Sync User
   become: yes
-  lineinfile:
-      dest: /usr/lib/systemd/user/resilio-sync.service
-      regexp: WantedBy=multi-user.target
-      line: WantedBy=default.target
+  command: systemctl enable resilio-sync
   when: resilio_sync_install
 
-- name: Enable Sync As Normal User
-  become: no
-  command: systemctl --user enable resilio-sync
-  when: resilio_sync_install
-
-- name: Start Sync As Normal User
-  become: no
-  command: systemctl --user restart resilio-sync
+- name: Start Sync As Sync User
+  become: yes
+  command: systemctl restart resilio-sync
   when: resilio_sync_install
